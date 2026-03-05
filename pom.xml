@@ -16,6 +16,11 @@
 
         <junit.version>5.14.3</junit.version>
         <restassured.version>6.0.0</restassured.version>
+
+        <!-- Allure -->
+        <allure.version>2.33.0</allure.version>
+        <allure.maven.version>2.12.0</allure.maven.version>
+        <allure.results.directory>${project.build.directory}/allure-results</allure.results.directory>
     </properties>
 
     <!-- Mantiene consistentes todas las versiones de JUnit 5 -->
@@ -40,17 +45,41 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- JUnit 5 (incluye api + engine + assertions) -->
+        <!-- JUnit 5 -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
             <scope>test</scope>
         </dependency>
 
-        <!-- JUnit 5 Params (ParameterizedTest, MethodSource, etc.) -->
+        <!-- JUnit 5 Params -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-params</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Jackson (leer pokemon-cases.json) -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.19.0</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Allure JUnit 5 -->
+        <dependency>
+            <groupId>io.qameta.allure</groupId>
+            <artifactId>allure-junit5</artifactId>
+            <version>${allure.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Allure + RestAssured (attachments request/response) -->
+        <dependency>
+            <groupId>io.qameta.allure</groupId>
+            <artifactId>allure-rest-assured</artifactId>
+            <version>${allure.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -67,7 +96,31 @@
                     <includes>
                         <include>**/*Test.java</include>
                     </includes>
+
+                    <!-- le dice a Allure dónde escribir results -->
+                    <systemPropertyVariables>
+                        <allure.results.directory>${allure.results.directory}</allure.results.directory>
+                    </systemPropertyVariables>
                 </configuration>
+            </plugin>
+
+            <!-- Allure: genera reporte automáticamente en 'verify' -->
+            <plugin>
+                <groupId>io.qameta.allure</groupId>
+                <artifactId>allure-maven</artifactId>
+                <version>${allure.maven.version}</version>
+                <configuration>
+                    <resultsDirectory>${allure.results.directory}</resultsDirectory>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>allure-report</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

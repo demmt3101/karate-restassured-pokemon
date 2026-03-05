@@ -36,4 +36,10 @@ build/
 .vscode/
 
 ### Mac OS ###
-.DS_Store
+.DS_Store}
+
+# Allure outputs / local artifacts
+.allure/
+target/
+allure-results/
+allure-report/
